@@ -7,10 +7,22 @@ const inputMode = require('ebased/handler/input/commandApi');
 // Nuestro lambda responde a API Gateway -> importamos output/commandApi
 const outputMode = require('ebased/handler/output/commandApi');
 
-const domain = async (commandPayload, commandMeta) => {
-  return { body: 'pepe' };
+// Se importa el sqs desde ebased
+const sqs = require('ebased/service/downstream/sqs');
+const config = require('ebased/util/config');
+const QUEUE_URL = config.get('QUEUE_URL');
+
+const domain = async ({commandMeta}) => {
+  
+  const sqsSendParams = {
+    QueueUrl: QUEUE_URL,
+    MessageBody: 'Hola Mundo'
+  }
+  await sqs.send(sqsSendParams, commandMeta);
+
+  return { body: 'okey' };
 };
 
 module.exports.handler = async (command, context) => {
   return commandMapper({ command, context }, inputMode, domain, outputMode);
-}
+};
