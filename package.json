@@ -1,0 +1,16 @@
+{
+  "name": "training-sls",
+  "version": "1.0.0",
+  "description": "Not so much to tell yet.",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "ebased": "^1.6.2",
+    "serverless-iam-roles-per-function": "^2.0.2"
+  }
+}
