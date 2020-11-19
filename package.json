@@ -8,8 +8,9 @@
   },
   "author": "",
   "license": "ISC",
-  "private": true,
   "dependencies": {
-    "serverless-iam-roles-per-function": "^2.0.2"
+    "ebased": "^1.6.2",
+    "serverless-iam-roles-per-function": "^2.0.2",
+    "uuid": "^8.3.1"
   }
 }

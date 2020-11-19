@@ -1,7 +1,7 @@
 service: sls-ebased
 
-# plugins:
-#   - serverless-iam-roles-per-function
+plugins:
+  - serverless-iam-roles-per-function
 
 provider:
   name: aws
@@ -10,34 +10,66 @@ provider:
   region: us-east-1
 
 functions:
-  LookAtThisLambda:
-    handler: src/lookAtThisLambda.handler
-    # environment:
-    #   AN_ENV_VAR: 'Una variable util'
-    #   QUEUE_URL: !Ref ColaQueue
-    # iamRoleStatementsName: ${self:service}-${self:provider.stage}-LookAtThisLambdaRole
-    # iamRoleStatements:
-    #   - Effect: Allow
-    #     Action:
-    #       - sqs:SendMessage
-    #     Resource:
-    #       - !GetAtt ColaQueue.Arn
+  FirstLambda:
+    handler: src/first-lambda/handler/firstLambda.handler
+    environment:
+      QUEUE_URL: !Ref ColaQueue
+    iamRoleStatementsName: ${self:service}-${self:provider.stage}-FirstLambdaLambdaRole
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - sqs:SendMessage
+        Resource:
+          - !GetAtt ColaQueue.Arn
     events:
       - http:
           path: ebased-sls/first
           method: post
           cors: true
 
-  # FinalLambda:
-  #   handler: src/finalLambda.handler
-  #   events:
-  #     - sqs:
-  #         arn:
-  #           !GetAtt ColaQueue.Arn
+  SecondLambda:
+    handler: src/second-lambda/handler/secondLambda.handler
+    environment:
+      OUTPUT_LAMBDA: ${self:service}-${self:provider.stage}-ThirdLambda
+    iamRoleStatementsName: ${self:service}-${self:provider.stage}-SecondLambdaRole
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - sqs:ReceiveMessage
+        Resource:
+          - !GetAtt ColaQueue.Arn
+      - Effect: Allow
+        Action:
+          - lambda:InvokeFunction
+        Resource: !GetAtt ThirdLambdaLambdaFunction.Arn
+    events:
+      - sqs:
+          arn:
+            !GetAtt ColaQueue.Arn
+  ThirdLambda:
+    handler: src/third-lambda/handler/thirdLambda.handler
+    environment:
+      SNS_ARN: !Ref MailerTopic
+    iamRoleStatementsName: ${self:service}-${self:provider.stage}-ThirdLambda
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - sns:Publish
+        Resource: !Ref MailerTopic
+   
 
-# resources:
-#   Resources:
-#     ColaQueue:
-#       Type: AWS::SQS::Queue
-#       Properties:
-#         QueueName: ${self:service}-${self:provider.stage}-ColaQueue
+resources:
+  Resources:
+    ColaQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-${self:provider.stage}-ColaQueue
+    MailerTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: Mailer SNS Topic
+        TopicName: ${self:service}-${self:provider.stage}-MailerTopic
+        Subscription:
+          - Protocol: email
+            Endpoint: marcosalejandrovalle@gmail.com
+          
