@@ -13,14 +13,14 @@ const inputMode = require('ebased/handler/input/commandApi');
 const outputMode = require('ebased/handler/output/commandApi');
 
 const domain = async ({commandPayload, commandMeta}) => {
-  
+  //dejo el primer parametro por que si no lo toma
   const sqsSendParams = {
     QueueUrl: CREATE_DEPOSIT_QUEUE,
-    MessageBody: "prueba",
+    MessageBody: "Test",
   };
   await sqs.send(sqsSendParams, commandMeta);
   
-  return { body: 'Repuesta '+ commandPayload };
+  return { body: 'OK' };
 };
 
 module.exports.handler = async (command, context) => {
