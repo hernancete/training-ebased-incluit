@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "ebased": "^1.6.2",
-    "serverless-iam-roles-per-function": "^2.0.2"
+    "serverless-iam-roles-per-function": "^2.0.2",
+    "uuid": "^8.3.1"
   }
 }
