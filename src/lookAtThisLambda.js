@@ -11,12 +11,12 @@ const outputMode = require('ebased/handler/output/commandApi');
 
 const QUEUE_URL = config.get('QUEUE_URL');
 
-const domain = async ({ eventMeta }) => {
+const domain = async (commandPayload) => {
   const sqsSendParams = {
     QueueUrl: QUEUE_URL,
-    MessageBody: 'Hello ebased',
+    MessageBody: JSON.stringify(commandPayload),
   };
-  await sqs.send(sqsSendParams, eventMeta);
+  await sqs.send(sqsSendParams);
 
   return { body: 'Ok' }
 }

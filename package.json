@@ -10,6 +10,10 @@
   "license": "ISC",
   "private": true,
   "dependencies": {
+    "ebased": "^1.6.2",
     "serverless-iam-roles-per-function": "^2.0.2"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.64"
   }
 }

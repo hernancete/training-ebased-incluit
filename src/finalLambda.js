@@ -2,8 +2,8 @@ const { batchEventMapper } = require('ebased/handler');
 const inputMode = require('ebased/handler/input/batchEventQueue');
 const outputMode = require('ebased/handler/output/batchEventConfirmation');
 
-const domain = async () => {
-    console.log('OMG IT WORKS!');
+const domain = async (eventPayload) => {
+    console.log(eventPayload);
 
     return { body: 'Ok' }
 };
